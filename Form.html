@@ -17,6 +17,9 @@
       margin: 4px 2px;
       cursor: pointer;
     }
+    hr.dashed {
+  border-top: 3px dashed #bbb;
+    }
     hr.rounded {
   border-top: 8px solid #bbb;
   border-radius: 5px;
@@ -24,7 +27,8 @@
     </style>
 <body>
     <form name ="formCal">
-        <p>        Tote 1 : <input type = "text" name = "txtnum1">
+        <h1>Lot Calculator</h1>
+    <p>  Tote 1 : <input type = "text" name = "txtnum1">
     <br>
     Tote 2 : <input type = "text" name = "txtnum2">
     <br>
@@ -44,8 +48,26 @@
     <br>
     <input type="button" class="button" value="Calculate" onclick="sumVal()">
     <button onclick="clear()" class="button">Clear</button>
+    <p>
+    <h1>Current Material issues</h1>
+    VB : <input type = "text" name = "txtVB">
+    Caps: <input type = "text" name = "txtCAP">
+    Syringes: <input type = "text" name = "txtSyr">
+    Plungers:<input type = "text" name = "txtPlug">
+    <input type="button" class="button" value="Calculate" onclick="difVal()">
+    <br>
+    <hr class="dashed">
+    VB : <input type = "text" name = "txtVB1">
+    Caps: <input type = "text" name = "txtCAP1">
+    Syringes: <input type = "text" name = "txtSyr1">
+    Plungers:<input type = "text" name = "txtPlug1">
+    
+    </p>    
+    
     </form>
     
+
+
     <script type="text/javascript">
         function sumVal()
             {
@@ -70,10 +92,30 @@
                  num3="";
                  res="";
                  sample="";
-                  ret="";
-        
+                ret="";
+             }
+             function difVal ()
+             {
+                var vb,cap,syr, plug ;
+                var difCap,difPlug,difVb,difCap ;
+                vb = Number(document.formCal.txtVB.value);
+                cap =Number(document.formCal.txtCAP.value);
+                syr = Number(document.formCal.txtSyr.value);
+                plug = Number(document.formCal.txtPlug.value);
+                totalMat = Number(document.formCal.txtRes.value);
 
-            }
+                difVb =  vb - totalMat ;
+                difCap =  cap - totalMat;
+                difSyr =  syr - totalMat;
+                difPlug = plug - totalMat;
+
+                document.formCal.txtVB1.value = difVb;
+                document.formCal.txtCAP1.value = difCap;
+                document.formCal.txtSyr1.value = difSyr;
+                document.formCal.txtPlug1.value = difPlug;
+
+             }
+
     </script>
 
 </body>
