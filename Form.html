@@ -28,11 +28,15 @@
 <body>
     <form name ="formCal">
         <h1>Lot Calculator</h1>
-    <p>  Tote 1 : <input type = "text" name = "txtnum1">
+
+    <p>
+    Good part : <input id="ttgood" type = "text" name = "txtGp" readonly>
+      <br>
+    Tote 1 : <input id="t1" type = "text" name = "txtnum1" onkeyup="totalGoodPart()">
     <br>
-    Tote 2 : <input type = "text" name = "txtnum2">
+    Tote 2 : <input type = "text" name = "txtnum2"onkeyup="totalGoodPart()">
     <br>
-    Tote 3 : <input type = "text" name = "txtnum3">
+    Tote 3 : <input type = "text" name = "txtnum3"onkeyup="totalGoodPart()">
     <hr class="rounded">
     </p>
     <p>
@@ -42,27 +46,28 @@
     <br>
     Retain : <input type = "text" name = "txtRet">
     <br>
-    Estimate Rejects: <input type = "text" name = "txtEstRj">
+    Estimate Rejects: <input id="myEst" type = "text" name = "txtEstRj">
     <br>
     </p>
     <hr class="rounded">
     Total Materials :  <input type = "text" name = "txtRes">
     <br>
-    <input type="button" class="button" value="Calculate" onclick="sumVal()">
+    <input id="btn" type="button" class="button" value="Calculate" onclick="sumVal()">
     <button onclick="clear()" class="button">Clear</button>
     <p>
     <h1>Current Material issues</h1>
-    VB : <input type = "text" name = "txtVB">
-    Caps: <input type = "text" name = "txtCAP">
-    Syringes: <input type = "text" name = "txtSyr">
-    Plungers:<input type = "text" name = "txtPlug">
-    <input type="button" class="button" value="Calculate" onclick="difVal()">
+    VB : <input type = "text" name = "txtVB" onkeyup="difVal()">
+    Caps: <input type = "text" name = "txtCAP" onkeyup="difVal()">
+    Syringes: <input type = "text" name = "txtSyr"onkeyup="difVal()">
+    Plungers:<input type = "text" name = "txtPlug" onkeyup="difVal()">
+    <!<input type="button" class="button" value="Calculate" onkeyup="difVal()"> 
     <br>
     <hr class="dashed">
-    VB : <input type = "text" name = "txtVB1">
+      <h1>Material under/over issued</h1>
+    VB : <input type = "text" name = "txtVB1" >
     Caps: <input type = "text" name = "txtCAP1">
-    Syringes: <input type = "text" name = "txtSyr1">
-    Plungers:<input type = "text" name = "txtPlug1">
+    Syringes: <input type = "text" name = "txtSyr1" >
+    Plungers:<input type = "text" name = "txtPlug1" >
     
     </p>    
     
@@ -71,6 +76,15 @@
 
 
     <script type="text/javascript">
+      function totalGoodPart()
+      {
+        var tote1, tote2, tote3,goodPart;
+        tote1 = Number(document.formCal.txtnum1.value);
+        tote2 = Number(document.formCal.txtnum2.value);
+        tote3 = Number(document.formCal.txtnum3.value);
+        goodPart =tote1 + tote2 + tote3;
+        document.formCal.txtGp.value = goodPart;
+      }
         function sumVal()
             {
                 var num1,num2,num3, res,sample, ret, rj,estRj;
@@ -87,7 +101,7 @@
                 document.formCal.txtRes.value = res;
                 
             }
-            function clear()
+        function clear()
             {
                  num1="";
                  num2="";
@@ -96,7 +110,7 @@
                  sample="";
                 ret="";
              }
-             function difVal ()
+       function difVal ()
              {
                 var vb,cap,syr, plug ;
                 var difCap,difPlug,difVb,difCap ;
@@ -116,7 +130,14 @@
                 document.formCal.txtSyr1.value = difSyr;
                 document.formCal.txtPlug1.value = difPlug;
 
-             }
+             };
+             var input = document.getElementById("myEst");
+            input.addEventListener("keypress", function(event) {
+             if (event.key === "Enter") {
+             event.preventDefault();
+            document.getElementById("btn").click();
+            }
+            });
 
     </script>
 
