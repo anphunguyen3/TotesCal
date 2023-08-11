@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>  
+<head>
+    <title>  Calculate tote</title>
+
+</head>
+<style>
+  
+
+  #resultTextbox {
+  width: 150px;
+  padding: 5px;
+}
+
+#resultTextbox.negative {
+  background-color: red; /* You can use any highlighting style you prefer */
+  color: white;
+}
+
+
+
+  body {
+            font-family: Arial, sans-serif;
+        }
+        .calculator-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .calculator-result {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .calculator-buttons input[type="button"] {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            font-size: 20px;
+        }
+        .calculator-clear {
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .toggle-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        }
+    .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+    .topright {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 18px;
+    background-color: #ABBAEA;
+    }
+    .centered {
+  position: absolute;
+  top: 8px;
+  left: 800px;
+     }
+    hr.dashed {
+  border-top: 3px dashed #bbb;
+    }
+    hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+    }
+    input[type="number"][value^="-"] {
+    border: 2px solid red;
+  }
+    </style>
+<body>
+    <form name ="formCal" onkeydown="return event.key != 'Enter';">
+        <h1>Lot Calculator</h1>
+      <! for 3 totes >
+   
+    <p>
+    Good part : <input id="ttgood" type = "text" name = "txtGp" readonly style="background-color: #47f26c" >
+      <br>
+    Tote 1 : <input id="t1" type = "text" name = "txtnum1" onkeyup="totalGoodPart()">
+    <br>
+    Tote 2 : <input type = "text" name = "txtnum2"onkeyup="totalGoodPart()">
+    <br>
+    Tote 3 : <input type = "text" name = "txtnum3"onkeyup="totalGoodPart()">
+     <br>
+     Tote 4 : <input type = "text" name = "txtnum4"onkeyup="totalGoodPart()">
+    <div class="topright">How to calculate Tote Split: 
+      <br>
+    Welder Count : <input id="t1" type = "text" name = "txtWC" onkeyup="toteSplit()" >
+    <br>
+    Rejects : <input type = "text" name = "txtRJ"onkeyup="toteSplit()">
+    <br>
+    Pressure Test Scraps : <input type = "text" name = "txtTestScp"onkeyup="toteSplit()">
+    <br>
+    Samples : <input type = "text" name = "txtSam"onkeyup="toteSplit()">
+    <br>
+    OpenLot?-Retain : <input type = "text" name = "txtRe1" onkeyup="toteSplit()">
+    <br>
+    Tote Split:  <input  type = "text" name = "txtToteSplit" readonly>
+  </div>
+
+
+    <hr class="rounded">
+    </p>
+    <p>
+    Reject in eDHR: <input type = "text" name = "txtReject">
+    <br>
+    Numbers of samples : <input type = "text" name = "txtSamp">
+    <br>
+    Retain : <input type = "text" name = "txtRet">
+    <br>
+    Estimate Rejects: <input id="myEst" type = "text" name = "txtEstRj">
+    <br>
+    </p>
+
+    <hr class="rounded">
+
+    Total Materials for the lot :  <input type = "text" name = "txtRes" readonly>
+    <div>Filter calculated for Cart A:
+      <br>
+     Filter Neeed for the lot: <input  type = "text" name = "txtFilNeeded" readonly>
+     </div>
+    <br>
+    <input id="btn" type="button" class="button" value="Calculate" onclick="sumVal();difVal();calculateFilterCartA()" >
+    <!--button onclick="clear()" class="button">Clear</button -->
+    <p>
+
+    <h1>Current Material issues</h1>
+    VB : <input type = "text" name = "txtVB" onkeyup="difVal()">
+    Caps: <input type = "text" name = "txtCAP" onkeyup="difVal()">
+    Syringes: <input type = "text" name = "txtSyr"onkeyup="difVal()">
+    Plungers:<input type = "text" name = "txtPlug" onkeyup="difVal()">
+    Filter(CartA):<input type = "text" name = "txtFilCA" onkeyup="difVal()">
+    <!<input type="button" class="button" value="Calculate" onkeyup="difVal()"> 
+    <br>
+    <hr class="dashed">
+      <h1>Material under/over issued</h1>
+    VB : <input type = "text" id="resultTextbox" name = "txtVB1" readonly>
+    Caps: <input type = "text" name = "txtCAP1" readonly>
+    Syringes: <input type = "text" name = "txtSyr1" onoutput="checkNegative()" readonly>
+    Plungers:<input type = "text" name = "txtPlug1"  readonly>
+    Filter(CartA):<input type = "text" name = "txtFilCA1" readonly>
+    </p>    
+
+    <button id="toggleButton" type="button" onclick="toggleCalculator()">Toggle Calculator</button>
+    <div class="calculator-container" id="calculatorDiv">
+        <div class="calculator-result" id="result">0</div>
+        <div class="calculator-buttons">
+            <input type="button" value="1" onclick="appendToResult('1')">
+            <input type="button" value="2" onclick="appendToResult('2')">
+            <input type="button" value="3" onclick="appendToResult('3')">
+            <input type="button" value="+" onclick="appendToResult('+')">
+            <br>
+            <input type="button" value="4" onclick="appendToResult('4')">
+            <input type="button" value="5" onclick="appendToResult('5')">
+            <input type="button" value="6" onclick="appendToResult('6')">
+            <input type="button" value="-" onclick="appendToResult('-')">
+            <br>
+            <input type="button" value="7" onclick="appendToResult('7')">
+            <input type="button" value="8" onclick="appendToResult('8')">
+            <input type="button" value="9" onclick="appendToResult('9')">
+            <input type="button" value="*" onclick="appendToResult('*')">
+            <br>
+            <input type="button" value="0" onclick="appendToResult('0')">
+            <input type="button" value="." onclick="appendToResult('.')">
+            <input type="button" value="=" onclick="calculateResult()">
+            <input type="button" value="/" onclick="appendToResult('/')">
+        </div>
+        <div class="calculator-clear">
+            <input type="button" value="Clear" onclick="clearResult()">
+            <input type="button" value="&#11164;" onclick="removeLastCharacter()">
+        </div>
+    </div>
+    
+
+    <script type="text/javascript">
+      function totalGoodPart()
+      {
+        var tote1, tote2, tote3,tote4,goodPart;
+        tote1 = Number(document.formCal.txtnum1.value);
+        tote2 = Number(document.formCal.txtnum2.value);
+        tote3 = Number(document.formCal.txtnum3.value);
+        tote4 = Number(document.formCal.txtnum4.value);
+        goodPart =tote1 + tote2 + tote3 +tote4;
+        document.formCal.txtGp.value = goodPart;
+      }
+
+      function toteSplit()
+      {
+        var WC, reject, sam,totesplit,testScp;
+        WC = Number(document.formCal.txtWC.value);
+        reject = Number(document.formCal.txtRJ.value);
+        testScp = Number(document.formCal.txtTestScp.value);
+        sam = Number(document.formCal.txtSam.value);
+        ret1 = Number(document.formCal.txtRe1.value);
+        totesplit = WC - reject - sam - ret1- testScp;
+        document.formCal.txtToteSplit.value = totesplit;
+      }
+
+      function sumVal()
+            {
+                //calculate  material for the lot
+                var num1,num2,num3, num4, res,sample, ret, rj,estRj;
+                num1 = Number(document.formCal.txtnum1.value);
+                num2 = Number(document.formCal.txtnum2.value);
+                num3 =Number(document.formCal.txtnum3.value);
+                num4 =Number(document.formCal.txtnum4.value);
+
+                rj =Number(document.formCal.txtReject.value);
+                sample =Number(document.formCal.txtSamp.value);
+                ret =Number(document.formCal.txtRet.value);
+                estRj =Number(document.formCal.txtEstRj.value);
+                //calculate
+                res=num1 +num2+ num3+ num4+sample+ret+rj+estRj;
+                document.formCal.txtRes.value = res;
+                
+            }
+      function clear()
+            {
+                 num1="";
+                 num2="";
+                 num3="";
+                 res="";
+                 sample="";
+                ret="";
+             }
+      function calculateFilterCartA()
+             {
+             var totalMat1;
+             var FilterNeeded;
+             const CalFilter =0.0625;
+             totalMat1 = Number(document.formCal.txtRes.value);
+             FilterNeeded =totalMat1*CalFilter;
+             document.formCal.txtFilNeeded.value = Math.round(FilterNeeded);
+             }
+
+      function difVal ()
+             {
+                var vb,cap,syr, plug,filCA ;
+                var FilterForLot;
+                var difCap,difPlug,difVb,difCap,difFilCA;
+                vb = Number(document.formCal.txtVB.value);
+                cap =Number(document.formCal.txtCAP.value);
+                syr = Number(document.formCal.txtSyr.value);
+                plug = Number(document.formCal.txtPlug.value);
+                filCA = Number(document.formCal.txtFilCA.value);
+                totalMat = Number(document.formCal.txtRes.value);
+                FilterForLot=Number(document.formCal.txtFilNeeded.value);
+                difVb =  vb - totalMat ;
+                difCap =  cap - totalMat;
+                difSyr =  syr - totalMat;
+                difPlug = plug - totalMat;
+                difFilCA = filCA -FilterForLot ;
+                
+                document.formCal.txtVB1.value = difVb;
+                document.formCal.txtCAP1.value = difCap;
+                document.formCal.txtSyr1.value = difSyr;
+                document.formCal.txtPlug1.value = difPlug;
+                document.formCal.txtFilCA1.value = difFilCA;
+
+             };
+
+
+
+        let currentInput = "";
+        let currentResult = 0;
+
+        function appendToResult(value) {
+            currentInput += value;
+            document.getElementById("result").innerText = currentInput;
+        }
+
+        function calculateResult() {
+            try {
+                currentResult = eval(currentInput);
+                document.getElementById("result").innerText = currentResult;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error";
+            }
+        }
+        function removeLastCharacter() {
+            currentInput = currentInput.slice(0, -1);
+            document.getElementById("result").innerText = currentInput;
+        }
+
+        function clearResult() {
+            currentInput = "";
+            currentResult = 0;
+            document.getElementById("result").innerText = currentResult;
+        }
+
+         function toggleCalculator() {
+            const calculatorDiv = document.getElementById("calculatorDiv");
+            calculatorDiv.style.display = calculatorDiv.style.display === "none" ? "block" : "none";
+        }
+        // Hide the calculator div when the page loads
+        window.onload = function () {
+            const calculatorDiv = document.getElementById("calculatorDiv");
+            calculatorDiv.style.display = "none" };
+
+    </script>
+
+ </form>
+</body>
+</html>
